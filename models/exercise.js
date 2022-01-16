@@ -11,15 +11,19 @@ const exerciseSchema = new mongoose.Schema({
     },
     weight: {
         type:Number,
+        min:1,
     },
     reps:{
         type:Number,
+        min:1
     },
     duration:{
         type:Number,
+        min:0
     },
     distance:{
         type:Number,
+        min:0
     },
     createdAt:{
         type:Date,
