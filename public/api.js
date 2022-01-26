@@ -15,7 +15,7 @@ const API = {
 
     const res = await fetch("/api/workouts/" + id, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Credentials" : true },
       body: JSON.stringify(data)
     });
 
