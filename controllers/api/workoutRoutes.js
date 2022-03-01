@@ -14,10 +14,11 @@ router.get('/', async (req, res) =>{
 //put for adding exercise to workout collection and populating workout
 router.put('/:id', async (req, res) =>{
     try{//first create the exercise with information from the user input
-        const newExercise = await Exercise.create(req.body);
+        //const newExercise = await Exercise.create(req.body); SAVING PREVIOUS CODE
         //then find the workout the user is adding to and push the new exercise to its exercise array
         const startingWorkout = await Workout.findById(req.params.id);
-        const updatedWorkout = await startingWorkout.updateOne({$push: {"exercises": newExercise._id}}, { returnDocument: 'after' });
+        const updatedWorkout = await startingWorkout.updateOne({$push: {"exercises": req.body}}, { returnDocument: 'after' });
+        //const updatedWorkout = await startingWorkout.updateOne({$push: {"exercises": newExercise._id}}, { returnDocument: 'after' });
         res.status(200).json(updatedWorkout);
     }
     catch(err){res.status(400).json(err.details)}
@@ -32,16 +33,16 @@ router.post("/", async ({body}, res) => {
     res.status(400).json(err.details)
     }
 });
-//get workouts in range for getting the last seven workouts
-//routes todo:
-//-->1.Populate Workouts
-//-->2.Complete range routes and math
-//-->3.Use $sum of the duration for all exercises in the workout then addFields to make a totalDuration field
+//get workouts in range for getting the last seven workouts populated with exercise data
 router.get('/range', async (req, res) =>{
 try{
-    const workoutRange = await Workout.find({}).limit(7).populate("exercises")
-    console.log(workoutRange)
-    res.status(201).json(workoutRange)
+    const rangedWorkouts = await Workout.aggregate([
+        {$addFields:
+        {"totalDuration": {$sum:{$sum:"$exercises.duration"}}}
+         },
+        {$limit:7}]);
+    console.log(rangedWorkouts)
+    res.status(201).json(rangedWorkouts)
 }
 catch(err){res.status(400).json(err.message)}
 });
