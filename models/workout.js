@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const workoutSchema = new Schema({
-createdAt:{
+day:{
     type:Date,
     default: Date.now,
     required:true,
@@ -38,9 +38,6 @@ exercises: [
         min:0
     },
 }
-    //old config in case of failure
-    //type:Schema.Types.ObjectId,
-    //ref:"Exercise"
 ]
 });
 
