@@ -4,7 +4,12 @@ const Exercise = require('../../models/exercise.js');
 
 router.get('/', async (req, res) =>{
     try{
-        const lastWorkout = await Workout.find({});
+        const lastWorkout = //await Workout.find({});// add totalDuration to route
+        await Workout.aggregate([
+            {$addFields:
+            {"totalDuration": {$sum:{$sum:"$exercises.duration"}}}
+             },
+            {$limit:1}]);
         res.json(lastWorkout);
     }
     catch(err){
